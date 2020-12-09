@@ -13,4 +13,4 @@ RUN pecl channel-update pecl.php.net \
   && pecl install swoole \
   && echo "extension=swoole.so" > /etc/php/7.3/mods-available/swoole.ini \
   && cd /etc/php/7.3/cli/conf.d && ln -s ../../mods-available/swoole.ini 30-swoole.ini \
-  && cd /etc/php/7.3/phpdbg/conf.d && ln -s ../../mods-available/swoole.ini 30-swoole.ini
+  && cd /etc/php/7.3/phpdbg/conf.d && ln -s ../../mods-available/swoole.ini 30-swoole.ini 
