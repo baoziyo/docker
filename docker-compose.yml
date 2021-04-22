@@ -253,6 +253,7 @@ services:
       - ./wiki/pj:/pj
 
   certbot:
+    container_name: certbot
     image: certbot/certbot:latest
     restart: unless-stopped
     volumes:
