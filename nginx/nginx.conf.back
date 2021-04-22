@@ -35,7 +35,15 @@ http {
     charset utf-8;
 
     location / {
-        index  index.html index.htm;
+        index  index.html index.htm index.php;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass   base-php:9000;
+        fastcgi_index  index.php;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include        fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     }
   }
   
