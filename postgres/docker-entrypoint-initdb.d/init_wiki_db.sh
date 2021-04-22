@@ -1,0 +1,12 @@
+#!/bin/bash
+
+### default database and user for wiki ##############################################
+if [ "$WIKI_POSTGRES_INIT" == 'true' ]; then
+	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+		CREATE USER $WIKI_POSTGRES_USER WITH PASSWORD '$WIKI_POSTGRES_PASSWORD';
+		CREATE DATABASE $WIKI_POSTGRES_DB;
+		GRANT ALL PRIVILEGES ON DATABASE $WIKI_POSTGRES_DB TO $WIKI_POSTGRES_USER;
+		ALTER ROLE $WIKI_POSTGRES_USER CREATEROLE SUPERUSER;
+	EOSQL
+	echo
+fi

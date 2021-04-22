@@ -1,0 +1,2 @@
+FROM atlassian/confluence-server
+
