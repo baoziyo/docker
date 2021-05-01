@@ -7,6 +7,7 @@ networks:
 services:
   mysql:
     container_name: mysql
+    restart: always
     build:
       context: ./mysql
       args:
@@ -24,6 +25,7 @@ services:
 
   nginx:
     container_name: nginx
+    restart: always
     build:
       context: ./nginx
     volumes:
@@ -39,6 +41,7 @@ services:
 
   base-php:
     container_name: base-php
+    restart: always
     build:
       context: ./php-fpm
       args:
@@ -66,6 +69,7 @@ services:
 
   redis:
     container_name: redis
+    restart: always
     build: ./redis
     volumes:
       - ${DATA_PATH_HOST}/redis:/data
@@ -76,6 +80,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
+    restart: always
     build: ./rabbitmq
     ports:
       - "${RABBITMQ_NODE_HOST_PORT}:5672"
@@ -92,6 +97,7 @@ services:
 
   gitlab:
     container_name: gitlab
+    restart: always
     build:
       context: ./gitlab
     environment:
@@ -127,6 +133,7 @@ services:
 
   gitlab-runner-1:
     container_name: gitlab-runner-1
+    restart: always
     image: gitlab/gitlab-runner:latest
     environment:
       - CI_SERVER_URL=${GITLAB_CI_SERVER_URL}
@@ -141,6 +148,7 @@ services:
 
   gitlab-runner-2:
     container_name: gitlab-runner-2
+    restart: always
     image: gitlab/gitlab-runner:latest
     environment:
       - CI_SERVER_URL=${GITLAB_CI_SERVER_URL}
@@ -155,6 +163,7 @@ services:
 
   gitlab-runner-3:
     container_name: gitlab-runner-3
+    restart: always
     image: gitlab/gitlab-runner:latest
     environment:
       - CI_SERVER_URL=${GITLAB_CI_SERVER_URL}
@@ -169,6 +178,7 @@ services:
 
   postgres:
     container_name: postgres
+    restart: always
     build:
       context: ./postgres
       args:
@@ -202,6 +212,7 @@ services:
 
   sonarqube:
     container_name: sonarqube
+    restart: always
     build:
       context: ./sonarqube
     hostname: "${SONARQUBE_HOSTNAME}"
@@ -224,6 +235,7 @@ services:
 
   mongo:
     container_name: mongo
+    restart: always
     build: ./mongo
     ports:
       - "${MONGODB_PORT}:27017"
@@ -235,6 +247,7 @@ services:
 
   wiki:
     container_name: wiki
+    restart: always
     build: ./wiki
     ports:
       - "${WIKI_PORT}:8090"
@@ -252,9 +265,11 @@ services:
 
   certbot:
     container_name: certbot
-    image: certbot/certbot:latest
     restart: unless-stopped
+    image: certbot/certbot:latest
     volumes:
-      - "./certbot/etc/letsencrypt:/etc/letsencrypt"
-      - "./certbot/var/lib/letsencrypt:/var/lib/letsencrypt"
+      - "${CERTBOT_ETC_LETSENCRYPT_PATH}:/etc/letsencrypt"
+      - "${CERTBOT_VAR_LETSENCRYPT_PATH}:/var/lib/letsencrypt"
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - backend

@@ -1,31 +1,24 @@
 server {
-
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
-
-    # For https
-    # listen 443 ssl default_server;
-    # listen [::]:443 ssl default_server ipv6only=on;
-    # ssl_certificate /etc/nginx/ssl/default.crt;
-    # ssl_certificate_key /etc/nginx/ssl/default.key;
-
-    server_name localhost;
-    root /var/www/public;
-    index index.php index.html index.htm;
+    listen 80;
+    listen 443 ssl;
+    ssl_certificate /etc/nginx/ssl/certbot/live/baoziyo.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/certbot/live/baoziyo.com/privkey.pem;
+    server_name git.baoziyo.com;
 
     location / {
-         try_files $uri $uri/ /index.php$is_args$args;
+        proxy_pass  ;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_max_temp_file_size 0;
+        proxy_redirect off;
+        proxy_read_timeout 240s;
     }
 
-    location ~ \.php$ {
-        try_files $uri /index.php =404;
-        fastcgi_pass base-php:9000;
-        fastcgi_index index.php;
-        fastcgi_buffers 16 16k;
-        fastcgi_buffer_size 32k;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        #fixes timeouts
-        fastcgi_read_timeout 600;
-        include fastcgi_params;
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
     }
 }
