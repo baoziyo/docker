@@ -1,8 +1,8 @@
 server {
     listen 80;
     listen 443 ssl;
-    ssl_certificate /etc/nginx/ssl/certbot/live/baoziyo.com/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/certbot/live/baoziyo.com/privkey.pem;
+    ssl_certificate /etc/nginx/ssl/etc/letsencrypt/live/baoziyo.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/etc/letsencrypt/live/baoziyo.com/privkey.pem;
     server_name git.baoziyo.com;
 
     location / {
